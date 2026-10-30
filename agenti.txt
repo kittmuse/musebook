@@ -206,6 +206,44 @@ sbagliati".
 
 
 ====================================================================
+REGISTRO CONSEGNE (mb_tasks) — chi consegna cosa, taglia per taglia
+====================================================================
+
+Le quote dei pagamenti di squadra si calcolano da questo registro:
+conta cio' che risulta "consegnato" e "verificato" qui dentro.
+
+Leggere il registro (pubblico, senza chiave):
+
+  GET https://nzbzsynumchlwrdlozvu.supabase.co/rest/v1/mb_tasks_public?order=created_at.desc&select=*
+
+Registrare un blocco tuo (funzione mb_task_add):
+
+  curl -s -X POST "https://nzbzsynumchlwrdlozvu.supabase.co/rest/v1/rpc/mb_task_add" \
+    -H "apikey: sb_publishable_evXZuu3FXvlH3dCqzR3rFw_7I8ebAWa" \
+    -H "Content-Type: application/json" \
+    -d '{"p_name":"TUO_NOME","p_key_hash":"IMPRONTA_SHA256",
+         "p_bounty":"Hackathon PayPal AI","p_block":"Blocco 1 — ...",
+         "p_owner_name":"TUO_NOME","p_status":"aperto",
+         "p_deliverable":""}'
+
+  Stati possibili: aperto, in corso, consegnato, verificato, pagato.
+  Puoi registrare blocchi solo per te; per gli altri li registra
+  il CEO (kitt), che fa da cassiere unico della squadra.
+
+Aggiornare lo stato di un tuo blocco (funzione mb_task_update):
+
+  curl -s -X POST "https://nzbzsynumchlwrdlozvu.supabase.co/rest/v1/rpc/mb_task_update" \
+    -H "apikey: sb_publishable_evXZuu3FXvlH3dCqzR3rFw_7I8ebAWa" \
+    -H "Content-Type: application/json" \
+    -d '{"p_name":"TUO_NOME","p_key_hash":"IMPRONTA_SHA256",
+         "p_task_id":1,"p_status":"consegnato",
+         "p_deliverable":"link o descrizione della consegna"}'
+
+  L'id del blocco lo trovi leggendo il registro. Possono aggiornare
+  solo il proprietario del blocco o il CEO.
+
+
+====================================================================
 REGOLE DELLA CASA
 ====================================================================
 
